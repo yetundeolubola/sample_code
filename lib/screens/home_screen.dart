@@ -24,61 +24,87 @@ class _HomeScreenState extends State<HomeScreen> {
     return Consumer(builder: (BuildContext context, watch, Widget? child) {
       final vm = watch(homeViewModel);
       return Scaffold(
-        body: Stack(
-          children: [
-            SlidingUpPanel(
-              controller: vm.switchScreen ? panelController : panelControl,
-              maxHeight: panelHeightOpen,
-              minHeight: panelHeightClosed,
-              parallaxOffset: .5,
-              body: Container(
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                  image: AssetImage(AppAssets.background),
-                  fit: BoxFit.cover,
-                )),
-                child: Padding(
-                    padding: const EdgeInsets.only(top: 100, left: 24),
-                    child: text(vm.switchScreen ? '' : AppString.findYourChow,
-                        color: AppColors.black,
-                        size: 40,
-                        fontWeight: FontWeight.bold)),
-              ),
-              panelBuilder: (sc) => AnimatedCrossFade(
-                duration: const Duration(microseconds: 300),
-                crossFadeState: vm.switchScreen
-                    ? CrossFadeState.showSecond
-                    : CrossFadeState.showFirst,
-                firstChild: vm.panel(sc, panelController),
-                secondChild: vm.resultPanel(sc),
-              ),
-              borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(18.0),
-                  topRight: Radius.circular(18.0)),
-              onPanelSlide: (double pos) => vm.switchScreen
-                  ? setState(() {
-                      vm.fabHeight =
-                          pos * (MediaQuery.of(context).size.width * -0.3);
-                    })
-                  : null,
-            ),
-            Positioned(
-              top: eqH(60),
-              left: vm.fabHeight,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 20),
-                child: Container(
-                  height: eqH(60),
-                  width: eqW(60),
-                  padding: const EdgeInsets.all(10),
+        body: AnimatedCrossFade(
+          firstCurve: Curves.easeOutQuart,
+          secondCurve: Curves.easeInOutCubicEmphasized,
+          duration: const Duration(seconds: 2),
+          crossFadeState: vm.switchScreen
+              ? CrossFadeState.showSecond
+              : CrossFadeState.showFirst,
+          firstChild: Stack(
+            children: [
+              SlidingUpPanel(
+                controller: panelController,
+                maxHeight: panelHeightOpen,
+                minHeight: panelHeightClosed,
+                parallaxOffset: .5,
+                body: Container(
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      color: AppColors.white),
-                  child: SvgPicture.asset(AppAssets.homeIcon),
+                      image: DecorationImage(
+                    image: AssetImage(AppAssets.background),
+                    fit: BoxFit.cover,
+                  )),
+                  child: Padding(
+                      padding: const EdgeInsets.only(top: 100, left: 24),
+                      child: text(vm.switchScreen ? '' : AppString.findYourChow,
+                          color: AppColors.black,
+                          size: 40,
+                          fontWeight: FontWeight.bold)),
+                ),
+                panelBuilder: (sc) => vm.panel(sc, panelController),
+                borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(18.0),
+                    topRight: Radius.circular(18.0)),
+                onPanelSlide: (double pos) => setState(() {
+                  vm.homeIconHeight =
+                      pos * (MediaQuery.of(context).size.width * -0.3);
+                }),
+              ),
+              Positioned(
+                top: eqH(60),
+                left: vm.homeIconHeight,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20),
+                  child: Container(
+                    height: eqH(60),
+                    width: eqW(60),
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: AppColors.white),
+                    child: SvgPicture.asset(AppAssets.homeIcon),
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
+          secondChild: Stack(
+            children: [
+              SlidingUpPanel(
+                controller: panelController,
+                maxHeight: panelHeightOpen,
+                minHeight: panelHeightClosed,
+                parallaxOffset: .5,
+                body: Container(
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                    image: AssetImage(AppAssets.background),
+                    fit: BoxFit.cover,
+                  )),
+                  child: Padding(
+                      padding: const EdgeInsets.only(top: 100, left: 24),
+                      child: text(vm.switchScreen ? '' : AppString.findYourChow,
+                          color: AppColors.black,
+                          size: 40,
+                          fontWeight: FontWeight.bold)),
+                ),
+                panelBuilder: (sc) => vm.resultPanel(sc),
+                borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(18.0),
+                    topRight: Radius.circular(18.0)),
+              ),
+            ],
+          ),
         ),
       );
     });
