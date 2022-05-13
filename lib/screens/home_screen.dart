@@ -25,8 +25,8 @@ class _HomeScreenState extends State<HomeScreen> {
       final vm = watch(homeViewModel);
       return Scaffold(
         body: AnimatedCrossFade(
-          firstCurve: Curves.easeOutQuart,
-          secondCurve: Curves.easeInOutCubicEmphasized,
+          firstCurve: Curves.easeInBack,
+          secondCurve: Curves.easeInBack,
           duration: const Duration(seconds: 2),
           crossFadeState: vm.switchScreen
               ? CrossFadeState.showSecond
